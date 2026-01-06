@@ -11,16 +11,6 @@ driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())
 driver.implicitly_wait(10)
 driver.get("https://sauce-demo.myshopify.com/account/login")
 
-# wait = WebDriverWait(driver, 10)
-# username=wait.until(EC.visibility_of_element_located((By.ID, "user-name")))
-# username.send_keys("standard_user")
-#
-# wait = WebDriverWait(driver, 10)
-# password=wait.until(EC.visibility_of_element_located((By.ID,"password")))
-# password.send_keys("secret_sauce")
-#
-# wait = WebDriverWait(driver, 5)
-# login= wait.until(EC.visibility_of_element_located((By.ID,"login-button"))).click()
 
 time.sleep(5)
 driver.quit()
