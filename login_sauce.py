@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 driver.implicitly_wait(10)
-driver.get("https://accounts.saucelabs.com/am/XUI/#login/")
+driver.get("https://sauce-demo.myshopify.com/account/login")
 
 # wait = WebDriverWait(driver, 10)
 # username=wait.until(EC.visibility_of_element_located((By.ID, "user-name")))
