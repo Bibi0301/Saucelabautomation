@@ -1,4 +1,6 @@
 import time
+
+from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.common.keys import Keys
@@ -14,9 +16,11 @@ driver.maximize_window()
 driver.implicitly_wait(10)
 driver.get("https://sauce-demo.myshopify.com/account/login")
 #for headless and Jenkis
-chrome_options.add_argument("--headless=new")
+chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--headless")  # Optional: for headless mode
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
 
 # Define a function to click on elements using their XPATH
 # XPATH is a way to locate elements on a webpage
@@ -41,74 +45,62 @@ def send_keys_to_element(driver, xpath, keys):
     element.send_keys(keys)
 
 # Function to perform user registration on the website
-# def signup():
-#     # Print a message to show registration test is starting
-#     print("Running registration test with unique email")
-#
-#     # Navigate to the main page before registration
-#     driver.get('https://sauce-demo.myshopify.com')
-#     # Wait 2 seconds for the page to load
-#     time.sleep(2)
-#
-#     # Store the XPATH for the Sign Up link
-#     SignUp = "//a[contains(text(),'Sign up')]"
-#     # Click the Sign Up link
-#     click_element(driver, SignUp)
-#     # Print a message to confirm the link was clicked
-#     print("Clicked on Sign up link")
-#
-#     # Wait 2 seconds for the registration page to load
-#     time.sleep(2)
-#     # Check if the registration page loaded by looking at the URL
-#     if "register" in driver.current_url:
-#         print("Registration form loaded successfully")
-#     else:
-#         print("Warning: Registration form may not have loaded properly - current URL:", driver.current_url)
-#
-#     # Enter first name into the registration form
-#     FirstName = "//input[@id='first_name']"
-#     send_keys_to_element(driver, FirstName, "Test")
-#     print(f"First name entered: Test")
-#
-#     # Enter last name into the registration form
-#     LastName = "//input[@id='last_name']"
-#     send_keys_to_element(driver, LastName, "User")
-#     print(f"Last name entered: User")
-#
-#     # Enter email into the registration form
-#     Email = "//input[@id='email']"
-#     # Generate a unique email address each time to avoid duplicate registration
-#     unique_email = f"testuser_{int(time.time())}@gmail.com"
-#     send_keys_to_element(driver, Email, unique_email)
-#     print(f"Unique email entered: {unique_email}")
-#
-#     # Enter password into the registration form
-#     Password = "//input[@id='password']"
-#     send_keys_to_element(driver, Password, "TestPass@123")
-#     print("Password entered")
-#
-#     # Click the Create Account button
-#     CreateButton = "//input[@type='submit' and @value='Create']"
-#     click_element(driver, CreateButton)
-#     print("Clicked on Create button")
-#
-#     # Wait 50 seconds for registration to process
-#     time.sleep(2)
-#
-#     # Check if registration was successful by looking for a logout button
-#     try:
-#         # Look for the logout element on the page
-#         logout_element = driver.find_element(By.XPATH, "//a[text()='Log Out']")
-#         if logout_element:
-#             print("Registration successful - Log Out element found")
-#             return True
-#     except:
-#         print("Registration is not successful - No redirect and Log Out element not found")
-#         return False
-#
-# # Start the registration process first
-# print("Performing registration with unique email...")
-# registration_success = signup()
+def signup():
+    print("Running registration test with unique email")
+
+    # Navigate to the main page before registration
+    driver.get("https://sauce-demo.myshopify.com")
+    time.sleep(2)
+
+    SignUp = "//a[contains(text(),'Sign up')]"
+    click_element(driver, SignUp)
+    print("Clicked on Sign up link")
+
+    time.sleep(2)
+    if "register" in driver.current_url:
+        print("Registration form loaded successfully")
+    else:
+        print("Warning: Registration form may not have loaded properly - current URL:", driver.current_url)
+# Enter first name into the registration form
+FirstName = driver.find_element(By.ID, "FirstName")  # or use By.NAME / By.XPATH depending on the form
+FirstName.send_keys("Test")
+print("First name entered: Test")
+
+# Enter last name into the registration form
+LastName = "//input[@id='last_name']"
+send_keys_to_element(driver, LastName, "User")
+print(f"Last name entered: User")
+
+# Enter email into the registration form
+Email = driver.find_element(By.ID, "Email")  # Adjust locator as needed
+unique_email = f"testuser_{int(time.time())}@example.com"
+Email.send_keys(unique_email)
+print(f"Email entered: {unique_email}")
+
+# Enter password into the registration form
+Password = driver.find_element(By.ID, "Password")  # Adjust locator if needed
+Password.send_keys("TestPass@123")
+print("Password entered: TestPass@123")
+
+# Click the Create Account button
+CreateButton = driver.find_element(By.XPATH, "//button[contains(text(),'Create')]")  # Adjust locator if needed
+click_element(driver, CreateButton)
+print("Clicked on Create Account button")
+
+# Wait 2 seconds for registration to process
+time.sleep(2)
+
+try:
+    logout_element = driver.find_element(By.XPATH, "//a[contains(text(),'Log Out')]")
+    if logout_element:
+        print("Log Out element found — registration successful")
+        "return True"
+except:
+    print("Log Out element not found — registration may have failed")
+    "return False"
+ # Start the registration process first
+print("Performing registration with unique email...")
+registration_success = signup()
 
 # Define test data - this contains login credentials and search terms for testing
 login_search_data = [
